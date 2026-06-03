@@ -1,66 +1,39 @@
-name: Content Generator
+name: SeleniumBase UC+CDP
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
-# CRITICAL: This gives GitHub Actions permission to commit and push files back to your repo
 permissions:
   contents: write
 
 jobs:
-  build-and-run:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-node-version: '3.10' # Adjust to your script's Python version if needed
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        # If you have a requirements file, uncomment the line below:
-        # pip install -r requirements.txt
-        # If using Playwright/Selenium for screenshots, install them here:
-        # pip install playwright && playwright install
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+          pip install seleniumbase
 
-    - name: Run Content Generator Script
-      run: |
-        python main.py # Replace main.py with the actual name of your execution script
+      - name: Install Chrome
+        run: sudo apt install google-chrome-stable
 
-    # -------------------------------------------------------------------
-    # OPTION 1: Upload screenshots as an artifact (Downloadable from GitHub UI)
-    # -------------------------------------------------------------------
-    - name: Upload Screenshots as Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: generated-screenshots
-        # Change './' to your specific folder (e.g., './output/') if your script saves them in a subfolder
-        path: |
-          ./*.png
-          ./*.jpg
-          ./*.jpeg
-      if: always() # Ensures screenshots upload even if previous steps fail
+      - name: Run script
+        run: python your_script.py
 
-    # -------------------------------------------------------------------
-    # OPTION 2: Automatically Commit and Push screenshots back to your repository
-    # -------------------------------------------------------------------
-    - name: Commit and Push Screenshots to Repo
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        
-        # Staging all new/modified image files. Adjust the path if they are in a subfolder.
-        git add ./*.png ./*.jpg ./*.jpeg || echo "No images found to stage"
-        
-        # Commit only if there are changes, preventing workflow errors when nothing is new
-        git diff-index --quiet HEAD || git commit -m "chore: automated screenshot backup [skip ci]"
-        git push
-      if: success() # Only runs if the script executed successfully
+      - name: Commit screenshots to repo
+        if: always()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add screenshots/
+          git diff --staged --quiet || git commit -m "Screenshots - $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
