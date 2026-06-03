@@ -32,13 +32,13 @@ with SB(uc=True, test=True, locale="en", ad_block=True) as sb:
     # Standard syntax for clicking a button containing specific text in CDP Mode
     sb.cdp.click('div[data-testid="signup-signup-button-div"] button:contains("Sign up")')
 
-    sb.sleep(0.2)
+    sb.sleep(0.05)
 
     sb.solve_captcha()
 
     sb.sleep(2)
 
-    sb.save_screenshot("after sign up", "screenshots")
+    sb.save_screenshot("after sign up.png", "screenshots")
 
     link=generate_vlink(w)
 
@@ -47,14 +47,14 @@ with SB(uc=True, test=True, locale="en", ad_block=True) as sb:
     sb.sleep(5)
     sb.cdp.press_keys('input[name="password"]', "Prince!4438#")
 
-    sb.save_screenshot("before sign in", "screenshots")
+    sb.save_screenshot("before sign in.png", "screenshots")
 
     # Standard syntax for clicking a button containing specific text in CDP Mode
     sb.cdp.click('#sign-in-form > div.relative.flex.items-center.justify-between.w-full.h-fit.mt-4 > div.relative.w-full > button:contains("Sign in")')
 
     sb.sleep(5)
 
-    sb.save_screenshot("after login", "screenshots")
+    sb.save_screenshot("after login.png", "screenshots")
 
 
         
