@@ -27,7 +27,7 @@ jobs:
         run: sudo apt install google-chrome-stable
 
       - name: Run script
-        run: python your_script.py
+        run: python new_recording_SB.py
 
       - name: Commit screenshots to repo
         if: always()
