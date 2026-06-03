@@ -20,7 +20,7 @@ def generate_vlink(c):
     
     raise Exception("ERRROR")
 
-with SB(uc=True, test=True, locale="en", ad_block=True) as sb:
+with SB(uc=True, test=True, locale_code="en", xvfb=True) as sb:
     sb.activate_cdp_mode("https://elevenlabs.io/app/sign-up")
 
     sb.sleep(3)
