@@ -30,7 +30,7 @@ with SB(uc=True, test=True, locale_code="en", xvfb=True) as sb:
     # Standard syntax for clicking a button containing specific text in CDP Mode
     sb.cdp.click('div[data-testid="signup-signup-button-div"] button:contains("Sign up")')
 
-    sb.sleep(0.1)
+    sb.sleep(0.5)
 
     sb.solve_captcha()
 
