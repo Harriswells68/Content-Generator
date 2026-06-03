@@ -28,7 +28,7 @@ with SB(uc=True, test=True, locale_code="en", xvfb=True) as sb:
     sb.activate_cdp_mode("https://elevenlabs.io/app/sign-up")
 
     sb.sleep(3)
-    sb.cdp.press_keys('input[name="email"]', "ytprojectelevenlabsacckbkb92947@catchmail.io")  # human-speed
+    sb.cdp.press_keys('input[name="email"]', "ytprojectelevenlabsacckbkb8992@catchmail.io")  # human-speed
     sb.cdp.press_keys('input[name="password"]', "Prince!4438#")
 
     # Standard syntax for clicking a button containing specific text in CDP Mode
@@ -40,7 +40,7 @@ with SB(uc=True, test=True, locale_code="en", xvfb=True) as sb:
 
     sb.sleep(2)
 
-    link=generate_vlink(92947)
+    link=generate_vlink(8992)
 
     sb.save_screenshot("screenshots/after_captcha.png")
 
