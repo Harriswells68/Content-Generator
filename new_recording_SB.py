@@ -3,6 +3,10 @@ import requests
 import re
 import time
 
+import os
+
+os.makedirs("screenshots", exist_ok=True)
+
 def generate_vlink(c):
     k=0
 
