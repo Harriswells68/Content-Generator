@@ -1,42 +1,78 @@
-name: SeleniumBase UC+CDP
+name: Tests
 
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   build:
+
+    env:
+      PY_COLORS: "1"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        python-version: ["3.14"]
 
     steps:
-      - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip wheel setuptools
+        pip install -r requirements.txt
+    - name: Install SeleniumBase
+      run: |
+        pip install .
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        # Stop the build if there are flake8 issues
+        flake8 . --count --show-source --statistics --exclude=temp
+    - name: Install Chrome
+      run: |
+        sudo apt install google-chrome-stable
+    - name: Check the console scripts interface
+      run: |
+        seleniumbase
+        sbase
+    - name: Install chromedriver
+      run: |
+        seleniumbase install chromedriver
+    - name: Make sure pytest is working
+      run: |
+        pytest --help
+        echo "def test_1(): pass" > nothing.py
+        pytest nothing.py
+    - name: Make sure nosetests is working
+      run: |
+        echo "def test_2(): pass" > nothing2.py
+        nosetests nothing2.py
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
+    - name: Install x11
+      run: sudo apt install x11-apps
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip wheel setuptools
-          pip install seleniumbase
+    - name: install apti
+      run: sudo aptitude update
 
-      - name: Install Chrome
-        run: sudo apt install google-chrome-stable
+    - name: install xutil
+      run: sudo aptitude install -y --force-yes xserver-xorg-core
+      
+    - name: install apti
+      run: sudo aptitude install -y --force-yes x11-xkb-utils && sudo aptitude install -y --force-yes xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic
 
-      - name: Install x11
-        run: sudo apt install x11-apps
+    - name: Run script
+      run: export DISPLAY=34.226.221.115:0.0 && python new_recording_SB.py --headed
 
-      - name: Run script
-        run: export DISPLAY=34.226.221.115:0.0 && python new_recording_SB.py --headed
-
-      - name: Commit screenshots to repo
-        if: always()
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add screenshots/
-          git diff --staged --quiet || git commit -m "Screenshots - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
+    - name: Commit screenshots to repo
+      if: always()
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add screenshots/
+        git diff --staged --quiet || git commit -m "Screenshots - $(date +'%Y-%m-%d %H:%M:%S')"
+        git push
