@@ -21,7 +21,7 @@ def generate_vlink(c):
     
     raise Exception("ERRROR")
 
-with SB(uc=True, test=True, locale="en", ad_block=True) as sb:
+with SB(uc=True, test=True, locale="en", ad_block=True, chromium_arg="--no-sandbox,--disable-dev-shm-usage") as sb:
     w=random.randint(9999, 12000)
     sb.activate_cdp_mode("https://elevenlabs.io/app/sign-up")
 
