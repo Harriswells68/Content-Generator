@@ -30,7 +30,7 @@ jobs:
         run: sudo apt install x11-apps
 
       - name: Run script
-        run: export DISPLAY=34.226.221.115:0.0 && python new_recording_SB.py --headed --xvfb
+        run: export DISPLAY=34.226.221.115:0.0 && python new_recording_SB.py --headed
 
       - name: Commit screenshots to repo
         if: always()
